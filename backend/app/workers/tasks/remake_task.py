@@ -172,23 +172,8 @@ def run_watermark_removal(self, task_id: int, user_id: int = 1):
 
         # Mark complete
         od = dict(task.output_data or {})
-                    # Post-processing: remove watermarks if configured
-            remove_wm = (task.config or {}).get("remove_watermark", False)
-            if remove_wm and output_video and os.path.exists(output_video):
-                try:
-                    from ...services.watermark_removal_service import watermark_removal_service
-                    wm_output = os.path.join(task_dir, "output_wm_removed.mp4")
-                    watermark_removal_service.remove_watermark(
-                        input_path=output_video,
-                        output_path=wm_output,
-                        fps=15,
-                    )
-                    output_video = wm_output
-                    od["video_url"] = f"/api/v1/remake/files/{task_id}/output_wm_removed.mp4"
-                except Exception as wm_err:
-                    print(f"[watermark] Error removing watermarks: {wm_err}", flush=True)
 
-od["video_url"] = f"/api/v1/remake/files/{task_id}/output.mp4"
+        od["video_url"] = f"/api/v1/remake/files/{task_id}/output.mp4"
         task.output_data = od
         task.status = TaskStatus.COMPLETED
         task.progress = 100
