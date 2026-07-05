@@ -14,6 +14,7 @@ import {
   AlertCircle,
   X,
   Download,
+  Play,
   RotateCcw,
   Eye,
   Wand2,
@@ -690,23 +691,44 @@ export default function RemakePage() {
               )}
 
               {/* Completed - Show Output */}
-              {taskStatus.status === 'completed' && taskStatus.output_data?.video_url && (
+              {taskStatus.status === 'completed' && (
                 <div className="mt-4 space-y-3">
-                  <div className="rounded-xl overflow-hidden bg-black/50 border border-green-500/20">
-                    <video
-                      src={taskStatus.output_data.video_url}
-                      controls
-                      className="w-full max-h-40 object-contain"
-                    />
-                  </div>
-                  <a
-                    href={taskStatus.output_data.video_url}
-                    download
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 text-sm font-medium hover:bg-green-500/20 transition-colors"
-                  >
-                    <Download className="h-4 w-4" />
-                    Download Video
-                  </a>
+                  {taskStatus.output_data?.video_url ? (
+                    <>
+                      <div className="rounded-xl overflow-hidden bg-black border-2 border-green-500/30">
+                        <video
+                          src={taskStatus.output_data.video_url}
+                          controls
+                          preload="metadata"
+                          className="w-full"
+                          style={{ maxHeight: '320px' }}
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <a
+                          href={taskStatus.output_data.video_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-700/50 border border-slate-600 text-slate-200 text-sm font-medium hover:bg-slate-700 transition-colors"
+                        >
+                          <Play className="h-4 w-4" />
+                          Preview Fullscreen
+                        </a>
+                        <a
+                          href={taskStatus.output_data.video_url}
+                          download={`remake_${taskId}_output.mp4`}
+                          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-green-600 text-white text-sm font-semibold hover:bg-green-500 transition-colors shadow-lg shadow-green-600/20"
+                        >
+                          <Download className="h-4 w-4" />
+                          Download Video
+                        </a>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-xs text-slate-400 text-center">
+                      Task completed. No video output available.
+                    </div>
+                  )}
                 </div>
               )}
             </div>

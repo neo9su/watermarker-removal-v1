@@ -1,5 +1,6 @@
 """FastAPI entry point for Video-Generate backend."""
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from .config import settings
 from .database import engine, Base
@@ -52,6 +53,9 @@ app.include_router(webhooks.router, prefix="/api/v1/webhooks", tags=["webhooks"]
 app.include_router(billing.router, prefix="/api/v1/billing", tags=["billing"])
 
 # Path B: Face swap + voice clone
+
+# Serve task output files
+app.mount("/api/v1/remake/files", StaticFiles(directory="/data/output/tasks"), name="output_files")
 app.include_router(remake.router, prefix="/api/v1/remake", tags=["remake"])
 
 
